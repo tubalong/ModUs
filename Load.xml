@@ -1,0 +1,17 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/ https://raw.githubusercontent.com/Gethe/wow-ui-source/live/Interface/AddOns/Blizzard_SharedXML/UI.xsd">
+    <Script file="Libs/LibStub.lua"/>
+    <Script file="Libs/md5.lua"/>
+
+    <Script file="Utils.lua"/>
+
+    <Script file="Data/Info.lua"/>
+    <Script file="Data/Realm.lua"/>
+    <Script file="Data/Character.lua"/>
+    <Script file="Data/Account.lua"/>
+    <Script file="Data/Guild.lua"/>
+    <Script file="Data/Population.lua"/>
+    <Script file="Data/Token.lua"/>
+
+    <Script file="Core.lua"/>
+</Ui>

@@ -1,0 +1,10 @@
+﻿## Interface: 120001
+## Version: r1
+## Title: |cffff6600ModUs|r |cffc0c0c0r1|r
+## Notes: |cffff6600ModUs|r data synchronization tool
+## Notes-zhCN: |cffff6600ModUs|r 数据同步工具
+## Notes-zhTW: |cffff6600ModUs|r 資料同步工具
+## SavedVariables: MU_Info, MU_Realm, MU_Charater, MU_Account, MU_Guild, MU_Population, MU_Token
+## IconTexture: Interface\AddOns\ModUs\icon.png
+
+Load.xml
