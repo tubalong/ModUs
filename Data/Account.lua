@@ -11,27 +11,21 @@ local U = ModUs.utils
 ---------------------------------------------------------------------
 local GetMounts
 
-if ModUs.isRetail then
-    GetMounts = function()
-        local mounts = ""
-        local numMounts = 0
-        for _, id in next, C_MountJournal.GetMountIDs() do
-            local isCollected = select(11, C_MountJournal.GetMountInfoByID(id))
-            if isCollected then
-                numMounts = numMounts + 1
-                if mounts == "" then
-                    mounts = id
-                else
-                    mounts = mounts .. "," .. id
-                end
+local function GetMounts()
+    local mounts = ""
+    local numMounts = 0
+    for _, id in next, C_MountJournal.GetMountIDs() do
+        local isCollected = select(11, C_MountJournal.GetMountInfoByID(id))
+        if isCollected then
+            numMounts = numMounts + 1
+            if mounts == "" then
+                mounts = id
+            else
+                mounts = mounts .. "," .. id
             end
         end
-        return mounts, numMounts
     end
-else
-    GetMounts = function()
-        return nil, nil
-    end
+    return mounts, numMounts
 end
 
 ---------------------------------------------------------------------
@@ -49,7 +43,7 @@ local function GetTitles()
 end
 
 ---------------------------------------------------------------------
--- achievements
+-- achievements (not available in Vanilla)
 ---------------------------------------------------------------------
 local function GetAchievements()
     -- TODO:
@@ -81,8 +75,6 @@ end
 ---------------------------------------------------------------------
 -- trading post
 ---------------------------------------------------------------------
-local GetTradingPostKnownItems
-
 if ModUs.isRetail then
     local GetCurrencyAmount = C_PerksProgram.GetCurrencyAmount
 
@@ -113,8 +105,16 @@ if ModUs.isRetail then
         MU_Account.tradingPost.knownItems = table.concat(result, ",")
     end
 else
-    GetTradingPostKnownItems = function()
-        return nil
+    function A.UpdateTradingPostCurrency()
+        -- do nothing
+    end
+
+    function A.UpdateTradingPostKnownItems()
+        -- do nothing
+    end
+
+    function A.SaveTradingPostKnownItems()
+        -- do nothing
     end
 end
 
