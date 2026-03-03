@@ -30,6 +30,47 @@ function U.GetClientMappingVersion(wowProjectID)
 end
 
 ---------------------------------------------------------------------
+-- flavor level ranges
+---------------------------------------------------------------------
+function U.GetFlavorLevelRanges()
+    if ModUs.isRetail then -- 正式服
+        return {
+            low = {1, 20},
+            medium = {21, 79},
+            high = {80, 89},
+            max = 90,
+        }
+    elseif ModUs.isVanilla then -- 经典怀旧服
+        return {
+            low = {1, 20},
+            medium = {21, 49},
+            high = {50, 59},
+            max = 60,
+        }
+    elseif ModUs.isMists then -- 怀旧服
+        return {
+            low = {1, 20},
+            medium = {21, 79},
+            high = {80, 89},
+            max = 90,
+        }
+    elseif ModUs.isWrath then -- 时光服
+        return {
+            low = {1, 20},
+            medium = {21, 69},
+            high = {70, 79},
+            max = 80,
+        }
+    elseif ModUs.isTBC then -- 周年服
+        return {
+            low = {1, 20},
+            medium = {21, 59},
+            high = {60, 69},
+            max = 70,
+        }
+    end
+end
+---------------------------------------------------------------------
 -- realm
 ---------------------------------------------------------------------
 local function RemoveSuffix(realmName)

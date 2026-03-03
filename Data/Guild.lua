@@ -6,10 +6,6 @@ ModUs.guild = {}
 local G = ModUs.guild
 local U = ModUs.utils
 
--- [1, 20], [21, 79], [80, max), max
-local MED_LEVEL = 80
-local LOW_LEVEL = 20
-
 ---------------------------------------------------------------------
 -- update data
 ---------------------------------------------------------------------
@@ -50,8 +46,8 @@ function G.UpdateData()
 
     -- 公会仅需成功扫描一次
     if not isGuildScanned then
-        MAX_LEVEL = U.GetMaxLevel()
-        if not MAX_LEVEL then return end
+        local levelRanges = U.GetFlavorLevelRanges()
+        if not levelRanges then return end
 
         t.classesAtMaxLevel = {}
         -- t.raceDistribution = {}
@@ -64,12 +60,12 @@ function G.UpdateData()
 
                 -- GetPlayerInfoByGUID(guid) -- guid not always available
 
-                if level == MAX_LEVEL then
+                if level == levelRanges.max then
                     t.classesAtMaxLevel[classID] = (t.classesAtMaxLevel[classID] or 0) + 1
                     t.levelDistribution.max = (t.levelDistribution.max or 0) + 1
-                elseif level >= MED_LEVEL then
+                elseif level >= levelRanges.high[1] then
                     t.levelDistribution.high = (t.levelDistribution.high or 0) + 1
-                elseif level > LOW_LEVEL then
+                elseif level >= levelRanges.medium[1] then
                     t.levelDistribution.medium = (t.levelDistribution.medium or 0) + 1
                 else
                     t.levelDistribution.low = (t.levelDistribution.low or 0) + 1
