@@ -10,7 +10,7 @@ function I.UpdateData()
     MU_Info = {
         flavor = U.GetClientMappingVersion(),
         region = GetCVar("portal"),
-        addonVersion = C_AddOns.GetAddOnMetadata("ModUs", "Version"),
+        addonVersion = tonumber(C_AddOns.GetAddOnMetadata("ModUs", "Version"):sub(2)),
         -- updateTime = time(),
     }
 end

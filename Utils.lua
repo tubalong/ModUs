@@ -32,6 +32,7 @@ end
 ---------------------------------------------------------------------
 -- flavor level ranges
 ---------------------------------------------------------------------
+-- wow_master.modus_level_segment_config
 function U.GetFlavorLevelRanges()
     if ModUs.isRetail then -- 正式服
         return {
