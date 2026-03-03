@@ -14,10 +14,11 @@ local GetMounts
 if ModUs.isRetail then
     GetMounts = function()
         local mounts = ""
-        -- local total = C_MountJournal.GetNumMounts()
-        for _, id in pairs(C_MountJournal.GetMountIDs()) do
+        local numMounts = 0
+        for _, id in next, C_MountJournal.GetMountIDs() do
             local isCollected = select(11, C_MountJournal.GetMountInfoByID(id))
             if isCollected then
+                numMounts = numMounts + 1
                 if mounts == "" then
                     mounts = id
                 else
@@ -25,11 +26,11 @@ if ModUs.isRetail then
                 end
             end
         end
-        return mounts
+        return mounts, numMounts
     end
 else
     GetMounts = function()
-        return nil
+        return nil, nil
     end
 end
 
@@ -125,7 +126,7 @@ function A.UpdateData()
 
     t.battleTag = U.GetBattleTag()
     t.isTrial = IsTrialAccount()
-    t.mounts = GetMounts()
+    t.mounts, t.numMounts = GetMounts()
     t.pets = GetPets()
     t.titles = GetTitles()
     t.achievements = GetAchievements()
