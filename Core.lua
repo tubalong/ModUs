@@ -44,7 +44,7 @@ function handler:ADDON_LOADED(name)
         -- 清除旧数据
         MU_Info = nil
         MU_Realm = nil
-        MU_Charater = {}
+        MU_Character = {}
         MU_Account = {}
         MU_Guild = {}
         MU_Population = {}

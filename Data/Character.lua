@@ -160,7 +160,7 @@ else
 end
 
 function C.UpdateTalents()
-    MU_Charater.talents = GetTalentStr()
+    MU_Character.talents = GetTalentStr()
 end
 
 ---------------------------------------------------------------------
@@ -329,7 +329,7 @@ end
 local function UpdateAllEquipmentSlots()
     local success
     for id in pairs(INV_SLOT_NAME) do
-        MU_Charater.equipments[INV_SLOT_NAME[id]], success = ExtractEquipmentData(id)
+        MU_Character.equipments[INV_SLOT_NAME[id]], success = ExtractEquipmentData(id)
         if not success then
             C_Timer.After(5, function()
                 C.UpdateEquipmentSlot(id)
@@ -341,7 +341,7 @@ end
 function C.UpdateEquipmentSlot(slot)
     local success
     if INV_SLOT_NAME[slot] then
-        MU_Charater.equipments[INV_SLOT_NAME[slot]], success = ExtractEquipmentData(slot)
+        MU_Character.equipments[INV_SLOT_NAME[slot]], success = ExtractEquipmentData(slot)
         if not success then
             C_Timer.After(5, function()
                 C.UpdateEquipmentSlot(slot)
@@ -387,7 +387,7 @@ local function GetSavedInstanceInfo()
 end
 
 function C.UpdateSavedInstances()
-    MU_Charater.savedInstances = GetSavedInstanceInfo()
+    MU_Character.savedInstances = GetSavedInstanceInfo()
 end
 
 ---------------------------------------------------------------------
@@ -417,7 +417,7 @@ end
 -- update data
 ---------------------------------------------------------------------
 function C.UpdateData()
-    local t = MU_Charater
+    local t = MU_Character
 
     t.battleTag = U.GetBattleTag()
     t.fullName = U.UnitFullName("player")
