@@ -209,6 +209,14 @@ local BONUS_INDEX = 13
 local CRAFTING_STAT_1 = Enum.ItemModification.ChangeModifiedCraftingStat_1
 local CRAFTING_STAT_2 = Enum.ItemModification.ChangeModifiedCraftingStat_2
 
+local function FillItemInfo(item, t)
+    item:ContinueOnItemLoad(function()
+        t.name = item:GetItemName()
+        t.icon = item:GetItemIcon()
+        t.quality = item:GetItemQuality()
+    end)
+end
+
 local function ExtractEquipmentData(slot)
     local data = {}
     local link = GetInventoryItemLink("player", slot)
@@ -319,10 +327,14 @@ local function ExtractEquipmentData(slot)
         -- level
         data.level = GetDetailedItemLevelInfo(link)
 
+        -- name, icon, quality
+        FillItemInfo(Item:CreateFromEquipmentSlot(slot), data)
+
         if not data.level then
             return data, false
         end
     end
+
     return data, true
 end
 
@@ -357,7 +369,7 @@ local GetNumSavedInstances = GetNumSavedInstances
 local GetSavedInstanceInfo = GetSavedInstanceInfo
 local GetSavedInstanceEncounterInfo = GetSavedInstanceEncounterInfo
 
-local function GetSavedInstanceInfo()
+local function GetSavedInstances()
     local savedInstances = {}
     for i = 1, GetNumSavedInstances() do
         -- name, lockoutId, reset, difficultyId, locked, extended, instanceIDMostSig, isRaid, maxPlayers, difficultyName, numEncounters, encounterProgress, extendDisabled, instanceId
@@ -387,7 +399,7 @@ local function GetSavedInstanceInfo()
 end
 
 function C.UpdateSavedInstances()
-    MU_Character.savedInstances = GetSavedInstanceInfo()
+    MU_Character.savedInstances = GetSavedInstances()
 end
 
 ---------------------------------------------------------------------
@@ -429,13 +441,15 @@ function C.UpdateData()
     t.gender = UnitSex("player")
     t.raceID = select(3, UnitRace("player"))
     t.classID = select(2, UnitClassBase("player"))
-    t.specID = PlayerUtil.GetCurrentSpecID() -- GetSpecializationInfo(GetSpecialization())
+    if ModUs.isRetail or ModUs.isMists then
+        t.specID = PlayerUtil.GetCurrentSpecID() -- GetSpecializationInfo(GetSpecialization())
+    end
     t.titleID = GetCurrentTitle()
     t.gameVersion = GetBuildInfo()
 
     t.professions = GetProfessionStr()
     t.talents = GetTalentStr()
-    t.savedInstances = GetSavedInstanceInfo()
+    t.savedInstances = GetSavedInstances()
 
     t.equipments = {}
     UpdateAllEquipmentSlots()

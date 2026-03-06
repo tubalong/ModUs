@@ -40,6 +40,7 @@ function handler:ADDON_LOADED(name)
         self:RegisterEvent("PLAYER_LOGOUT")
         self:RegisterEvent("PLAYER_ENTERING_WORLD")
         self:RegisterEvent("PLAYER_TARGET_CHANGED")
+        self:RegisterEvent("UPDATE_INSTANCE_INFO")
 
         -- 清除旧数据
         MU_Info = nil
@@ -71,6 +72,7 @@ end
 -- PLAYER_LOGOUT
 ---------------------------------------------------------------------
 function handler:PLAYER_LOGOUT()
+    -- whole data update time
     I.RefreshUpdateTime()
     -- trading post known items
     A.SaveTradingPostKnownItems()
@@ -126,7 +128,6 @@ function handler:PLAYER_ENTERING_WORLD()
     self:RegisterEvent("GUILD_ROSTER_UPDATE")
     self:RegisterEvent("GROUP_ROSTER_UPDATE")
     self:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
-    self:RegisterEvent("UPDATE_INSTANCE_INFO")
     self:RegisterEvent("ACHIEVEMENT_EARNED")
 
     if ModUs.isRetail then
