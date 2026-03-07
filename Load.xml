@@ -12,6 +12,7 @@
     <Script file="Data/Guild.lua"/>
     <Script file="Data/Population.lua"/>
     <Script file="Data/Token.lua"/>
+    <Script file="Data/BlackMarket.lua"/>
 
     <Script file="Core.lua"/>
 </Ui>

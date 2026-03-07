@@ -10,6 +10,7 @@ local ModUs = select(2, ...)
 ---@field guild Guild
 ---@field population Population
 ---@field token Token
+---@field blackMarket BlackMarket
 
 local I = ModUs.info
 local U = ModUs.utils
@@ -19,6 +20,7 @@ local A = ModUs.account
 local G = ModUs.guild
 local P = ModUs.population
 local T = ModUs.token
+local B = ModUs.blackMarket
 
 ---------------------------------------------------------------------
 -- event handler
@@ -41,6 +43,9 @@ function handler:ADDON_LOADED(name)
         self:RegisterEvent("PLAYER_ENTERING_WORLD")
         self:RegisterEvent("PLAYER_TARGET_CHANGED")
         self:RegisterEvent("UPDATE_INSTANCE_INFO")
+        if C_BlackMarket then
+            self:RegisterEvent("BLACK_MARKET_ITEM_UPDATE")
+        end
 
         -- 清除旧数据
         MU_Info = nil
@@ -50,6 +55,7 @@ function handler:ADDON_LOADED(name)
         MU_Guild = {}
         MU_Population = {}
         MU_Token = {}
+        MU_BlackMarket = {}
 
         -- token
         if C_WowTokenPublic.GetCommerceSystemStatus() then
@@ -232,4 +238,20 @@ function handler:GROUP_ROSTER_UPDATE(immediate)
             frame:GROUP_ROSTER_UPDATE(true)
         end)
     end
+end
+
+---------------------------------------------------------------------
+-- BLACK_MARKET_ITEM_UPDATE
+---------------------------------------------------------------------
+local timer2
+function handler:BLACK_MARKET_ITEM_UPDATE()
+    if timer2 then
+        timer2:Cancel()
+        timer2 = nil
+    end
+
+    timer2 = C_Timer.NewTimer(1, function()
+        timer2 = nil
+        B.UpdateBlackMarket()
+    end)
 end
