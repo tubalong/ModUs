@@ -30,7 +30,7 @@ function P.SaveUnitData(unit)
     t[guid] = {
         classID = select(2, UnitClassBase(unit)),
         raceID = select(3, UnitRace(unit)),
-        level = UnitLevel(unit),
+        level = U.GetLevelRangeName(UnitLevel(unit)),
         faction = UnitFactionGroup(unit),
         gender = UnitSex(unit),
         normalizedRealm = realm,

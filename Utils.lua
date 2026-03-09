@@ -71,6 +71,20 @@ function U.GetFlavorLevelRanges()
         }
     end
 end
+
+function U.GetLevelRangeName(level)
+    local ranges = U.GetFlavorLevelRanges()
+    if level >= ranges.low[1] and level <= ranges.low[2] then
+        return "low"
+    elseif level >= ranges.medium[1] and level <= ranges.medium[2] then
+        return "medium"
+    elseif level >= ranges.high[1] and level <= ranges.high[2] then
+        return "high"
+    elseif level == ranges.max then
+        return "max"
+    end
+end
+
 ---------------------------------------------------------------------
 -- realm
 ---------------------------------------------------------------------
