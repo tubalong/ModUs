@@ -6,6 +6,6 @@
 ## Notes-zhTW: |cffff6600ModUs|r 資料同步工具
 ## SavedVariables: MU_Info, MU_Realm, MU_Account, MU_Guild, MU_Population, MU_Token, MU_BlackMarket
 ## SavedVariablesPerCharacter: MU_Character
-## IconTexture: Interface\AddOns\ModUs\Logo.png
+## IconTexture: Interface\AddOns\ModUs\Logo
 
 Load.xml
