@@ -124,7 +124,7 @@ end
 function A.UpdateData()
     local t = MU_Account
 
-    t.battleTag = U.GetBattleTag()
+    t.battleTagMd5, t.battleTag = U.GetBattleTag()
     t.isTrial = IsTrialAccount()
     t.mounts, t.numMounts = GetMounts()
     t.pets = GetPets()

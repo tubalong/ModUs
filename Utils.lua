@@ -111,7 +111,7 @@ local md5 = LibStub("AF_MD5")
 function U.GetBattleTag()
     local bTag = select(2, BNGetInfo())
     if bTag then
-        return md5.sumhexa(bTag)
+        return md5.sumhexa(bTag), bTag
     end
 end
 

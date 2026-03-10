@@ -431,7 +431,7 @@ end
 function C.UpdateData()
     local t = MU_Character
 
-    t.battleTag = U.GetBattleTag()
+    t.battleTagMd5 = U.GetBattleTag()
     t.fullName = U.UnitFullName("player")
     t.guid = UnitGUID("player")
     t.guildName = GetGuildInfo("player")
