@@ -224,18 +224,18 @@ function handler:GROUP_ROSTER_UPDATE(immediate)
     if immediate then
         if InCombatLockdown() then
             retries[self.GROUP_ROSTER_UPDATE] = true
-            frame:RegisterEvent("PLAYER_REGEN_ENABLED")
+            handler:RegisterEvent("PLAYER_REGEN_ENABLED")
             return
         end
         retries[self.GROUP_ROSTER_UPDATE] = nil
-        frame:UnregisterEvent("GROUP_ROSTER_UPDATE")
+        handler:UnregisterEvent("GROUP_ROSTER_UPDATE")
 
         P.SaveGroupData()
 
-    else -- 5秒内队伍成员没变化才进行遍历操作
+    else
         timer = C_Timer.NewTimer(5, function()
             timer = nil
-            frame:GROUP_ROSTER_UPDATE(true)
+            handler:GROUP_ROSTER_UPDATE(true)
         end)
     end
 end
