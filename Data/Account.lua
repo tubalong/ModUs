@@ -6,45 +6,103 @@ ModUs.account = {}
 local A = ModUs.account
 local U = ModUs.utils
 
+local tinsert, tconcat = table.insert, table.concat
+
 ---------------------------------------------------------------------
 -- mounts
 ---------------------------------------------------------------------
-local GetMounts
+local GetMountIDs = C_MountJournal.GetMountIDs
+local GetMountInfoByID = C_MountJournal.GetMountInfoByID
 
 local function GetMounts()
-    local mounts = ""
+    local mounts = {}
     local numMounts = 0
-    for _, id in next, C_MountJournal.GetMountIDs() do
-        local isCollected = select(11, C_MountJournal.GetMountInfoByID(id))
+    for _, id in next, GetMountIDs() do
+        local isCollected = select(11, GetMountInfoByID(id))
         if isCollected then
             numMounts = numMounts + 1
-            if mounts == "" then
-                mounts = id
-            else
-                mounts = mounts .. "," .. id
-            end
+            tinsert(mounts, id)
         end
     end
-    return mounts, numMounts
+    return tconcat(mounts, ","), numMounts
 end
 
 ---------------------------------------------------------------------
--- pets TODO:
+-- pets
 ---------------------------------------------------------------------
+local GetNumPets = C_PetJournal.GetNumPets
+local GetPetInfoByIndex = C_PetJournal.GetPetInfoByIndex
+local GetOwnedPetIDs = C_PetJournal.GetOwnedPetIDs
+local GetPetInfoByPetID = C_PetJournal.GetPetInfoByPetID
+
 local function GetPets()
-    return nil
+    local _, owned = GetNumPets()
+    local pets = {}
+    for _, guid in next, GetOwnedPetIDs() do
+        local id = GetPetInfoByPetID(guid)
+        tinsert(pets, id)
+    end
+    return tconcat(pets, ","), owned
 end
 
 ---------------------------------------------------------------------
--- titles TODO:
+-- toys
 ---------------------------------------------------------------------
+local SetAllExpansionTypeFilters = C_ToyBox.SetAllExpansionTypeFilters
+local SetAllSourceTypeFilters = C_ToyBox.SetAllSourceTypeFilters
+local SetCollectedShown = C_ToyBox.SetCollectedShown
+local SetUncollectedShown = C_ToyBox.SetUncollectedShown
+local GetUncollectedShown = C_ToyBox.GetUncollectedShown
+
+local function GetToys()
+    SetAllExpansionTypeFilters(true)
+    SetAllSourceTypeFilters(true)
+    SetCollectedShown(true)
+
+    local uncollectedShown = GetUncollectedShown()
+    SetUncollectedShown(false)
+
+    local toys = {}
+    local numToys = 0
+    for i = 1, C_ToyBox.GetNumLearnedDisplayedToys() do
+        local id = C_ToyBox.GetToyFromIndex(i)
+        if id then
+            numToys = numToys + 1
+            tinsert(toys, id)
+        end
+    end
+
+    -- restore
+    SetUncollectedShown(uncollectedShown)
+
+    return tconcat(toys, ","), numToys
+end
+
+---------------------------------------------------------------------
+-- titles
+---------------------------------------------------------------------
+local GetNumTitles = GetNumTitles
+local IsTitleKnown = IsTitleKnown
+
 local function GetTitles()
-    return nil
+    local titles = {}
+    local numTitles = 0
+    for i = 1, GetNumTitles() do
+        if IsTitleKnown(i) then
+            numTitles = numTitles + 1
+            tinsert(titles, i)
+        end
+    end
+    return tconcat(titles, ","), numTitles
 end
 
 ---------------------------------------------------------------------
 -- achievements (not available in Vanilla)
 ---------------------------------------------------------------------
+local GetTotalAchievementPoints = GetTotalAchievementPoints
+local GetLatestCompletedAchievements = GetLatestCompletedAchievements
+local GetAchievementInfo = GetAchievementInfo
+
 local function GetAchievements()
     -- TODO:
     return nil
@@ -127,8 +185,9 @@ function A.UpdateData()
     t.battleTagMd5, t.battleTag = U.GetBattleTag()
     t.isTrial = IsTrialAccount()
     t.mounts, t.numMounts = GetMounts()
-    t.pets = GetPets()
-    t.titles = GetTitles()
+    t.pets, t.numPets = GetPets()
+    t.titles, t.numTitles = GetTitles()
+    t.toys, t.numToys = GetToys()
     t.achievements = GetAchievements()
     t.latestAchievements = GetLatestAchievements()
     t.achievementPoints = GetTotalAchievementPoints()
