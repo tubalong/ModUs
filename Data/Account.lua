@@ -121,21 +121,41 @@ end
 local GetTotalAchievementPoints = GetTotalAchievementPoints
 local GetLatestCompletedAchievements = GetLatestCompletedAchievements
 local GetAchievementInfo = GetAchievementInfo
+local GetCategoryList = GetCategoryList
+local GetCategoryNumAchievements = GetCategoryNumAchievements
 
 local function GetAchievements()
-    -- TODO:
-    return nil
+    local result = {}
+    local list = GetCategoryList()
+    for _, id in next, list do
+        local name, parentID = GetCategoryInfo(id)
+        -- 光辉事迹 81
+        -- 绝版 15234
+        if id == 81 or parentID == 81 or id == 15234 or parentID == 15234 then
+            -- print("Found category: " .. name .. " (id: " .. id .. ")")
+            local achievements = {}
+            for i = 1, GetCategoryNumAchievements(id) do
+                local id, name, points, completed, month, day, year, description, flags, icon, rewardText, isGuild, wasEarnedByMe, earnedBy, isStatistic = GetAchievementInfo(id, i)
+                if completed then
+                    tinsert(achievements, id)
+                end
+            end
+            tinsert(result, {category = id, achievements = tconcat(achievements, ",")})
+        end
+    end
+    return result
 end
 
 local function GetLatestAchievements()
     local t = {}
     for _, achievementID in pairs({GetLatestCompletedAchievements()}) do
-        local id, name, points, completed, month, day, year, desc, _, icon, _, isGuild = GetAchievementInfo(achievementID)
+        local id, name, points, completed, month, day, year, desc, _, icon, rewardText, isGuild = GetAchievementInfo(achievementID)
         tinsert(t, {
             id = id,
             name = name,
             icon = icon,
             points = points,
+            reward = rewardText,
             date = U.FormatDate(year, month, day), -- normalize to YYYY-MM-DD
         })
     end
@@ -144,7 +164,26 @@ end
 
 function A.UpdateAchievements()
     local t = MU_Account
-    t.achievements = GetAchievements()
+
+    local numFoSAchievements = 0
+    local numLegacyAchievements = 0
+
+    local list = GetCategoryList()
+    for _, id in next, list do
+        local name, parentID = GetCategoryInfo(id)
+        if id == 81 or parentID == 81 then
+            -- 光辉事迹 81
+            local _, completed = GetCategoryNumAchievements(id)
+            numFoSAchievements = numFoSAchievements + completed
+        elseif id == 15234 or parentID == 15234 then
+            -- 绝版 15234
+            local _, completed = GetCategoryNumAchievements(id)
+            numLegacyAchievements = numLegacyAchievements + completed
+        end
+    end
+
+    t.numFoSAchievements = numFoSAchievements
+    t.numLegacyAchievements = numLegacyAchievements
     t.latestAchievements = GetLatestAchievements()
     t.achievementPoints = GetTotalAchievementPoints()
 end
@@ -207,9 +246,8 @@ function A.UpdateData()
     -- A.UpdatePets()
     -- A.UpdateToys()
     A.UpdateMounts()
-    t.achievements = GetAchievements()
-    t.latestAchievements = GetLatestAchievements()
-    t.achievementPoints = GetTotalAchievementPoints()
+    -- t.achievements = GetAchievements()
+    A.UpdateAchievements()
 
     t.tradingPost = {}
     A.UpdateTradingPostCurrency()
