@@ -8,6 +8,7 @@ local U = ModUs.utils
 
 local GetProfessions = GetProfessions
 local GetProfessionInfo = GetProfessionInfo
+local tconcat = table.concat
 
 ---------------------------------------------------------------------
 -- profession names
@@ -58,7 +59,7 @@ local function GetProfessionStr()
         end
     end
 
-    return table.concat(professions, "/")
+    return tconcat(professions, "/")
 end
 
 ---------------------------------------------------------------------
@@ -254,7 +255,7 @@ local function ExtractEquipmentData(slot)
                 tinsert(gems, t[k])
             end
         end
-        data.gems = table.concat(gems, ",")
+        data.gems = tconcat(gems, ",")
 
         -- suffix
         data.suffix = t[SUFFIX_INDEX]
@@ -272,7 +273,7 @@ local function ExtractEquipmentData(slot)
                 bonusIndex = bonusIndex + 1
             end
         end
-        data.bonuses = table.concat(bonuses, ",")
+        data.bonuses = tconcat(bonuses, ",")
 
         -- modifiers
         data.modifiers = {}
@@ -292,10 +293,10 @@ local function ExtractEquipmentData(slot)
             data.simc = data.simc .. ",enchant_id=" .. data.enchant
         end
         if #gems ~= 0 then
-            data.simc = data.simc .. ",gem_id=" .. table.concat(gems, "/")
+            data.simc = data.simc .. ",gem_id=" .. tconcat(gems, "/")
         end
         if #bonuses ~= 0 then
-            data.simc = data.simc .. ",bonus_id=" .. table.concat(bonuses, "/")
+            data.simc = data.simc .. ",bonus_id=" .. tconcat(bonuses, "/")
         end
 
         if ModUs.isRetail then
@@ -307,14 +308,14 @@ local function ExtractEquipmentData(slot)
             if data.modifiers[CRAFTING_STAT_2] then
                 tinsert(craftedStats, data.modifiers[CRAFTING_STAT_2])
             end
-            data.craftedStats = table.concat(craftedStats, ",")
+            data.craftedStats = tconcat(craftedStats, ",")
 
             -- crafted quality
             data.craftedQuality = GetItemCraftedQualityByItemInfo(link)
 
             -- simc
             if #craftedStats ~= 0 then
-                data.simc = data.simc .. ",crafted_stats=" .. table.concat(craftedStats, "/")
+                data.simc = data.simc .. ",crafted_stats=" .. tconcat(craftedStats, "/")
             end
             if data.craftedQuality then
                 data.simc = data.simc .. ",crafting_quality=" .. data.craftedQuality
@@ -422,7 +423,7 @@ function GetWatchedAddons()
         end
     end
 
-    return table.concat(data, ";")
+    return tconcat(data, ";")
 end
 
 ---------------------------------------------------------------------
@@ -445,6 +446,7 @@ function C.UpdateData()
     t.gender = UnitSex("player")
     t.raceID = select(3, UnitRace("player"))
     t.classID = select(2, UnitClassBase("player"))
+    t.money = GetMoney()
     if ModUs.isRetail or ModUs.isMists then
         t.specID = PlayerUtil.GetCurrentSpecID() -- GetSpecializationInfo(GetSpecialization())
     end
