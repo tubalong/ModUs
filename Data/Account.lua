@@ -27,6 +27,11 @@ local function GetMounts()
     return tconcat(mounts, ","), numMounts
 end
 
+function A.UpdateMounts()
+    local t = MU_Account
+    t.mounts, t.numMounts = GetMounts()
+end
+
 ---------------------------------------------------------------------
 -- pets
 ---------------------------------------------------------------------
@@ -40,9 +45,16 @@ local function GetPets()
     local pets = {}
     for _, guid in next, GetOwnedPetIDs() do
         local id = GetPetInfoByPetID(guid)
-        tinsert(pets, id)
+        if id then
+            tinsert(pets, id)
+        end
     end
     return tconcat(pets, ","), owned
+end
+
+function A.UpdatePets()
+    local t = MU_Account
+    t.pets, t.numPets = GetPets()
 end
 
 ---------------------------------------------------------------------
@@ -53,6 +65,8 @@ local SetAllSourceTypeFilters = C_ToyBox.SetAllSourceTypeFilters
 local SetCollectedShown = C_ToyBox.SetCollectedShown
 local SetUncollectedShown = C_ToyBox.SetUncollectedShown
 local GetUncollectedShown = C_ToyBox.GetUncollectedShown
+local GetNumLearnedDisplayedToys = C_ToyBox.GetNumLearnedDisplayedToys
+local GetToyFromIndex = C_ToyBox.GetToyFromIndex
 
 local function GetToys()
     SetAllExpansionTypeFilters(true)
@@ -64,9 +78,9 @@ local function GetToys()
 
     local toys = {}
     local numToys = 0
-    for i = 1, C_ToyBox.GetNumLearnedDisplayedToys() do
-        local id = C_ToyBox.GetToyFromIndex(i)
-        if id then
+    for i = 1, GetNumLearnedDisplayedToys() do
+        local id = GetToyFromIndex(i)
+        if id and id ~= -1 then
             numToys = numToys + 1
             tinsert(toys, id)
         end
@@ -76,6 +90,11 @@ local function GetToys()
     SetUncollectedShown(uncollectedShown)
 
     return tconcat(toys, ","), numToys
+end
+
+function A.UpdateToys()
+    local t = MU_Account
+    t.toys, t.numToys = GetToys()
 end
 
 ---------------------------------------------------------------------
@@ -184,10 +203,10 @@ function A.UpdateData()
 
     t.battleTagMd5, t.battleTag = U.GetBattleTag()
     t.isTrial = IsTrialAccount()
-    t.mounts, t.numMounts = GetMounts()
-    t.pets, t.numPets = GetPets()
     t.titles, t.numTitles = GetTitles()
-    t.toys, t.numToys = GetToys()
+    -- A.UpdatePets()
+    -- A.UpdateToys()
+    A.UpdateMounts()
     t.achievements = GetAchievements()
     t.latestAchievements = GetLatestAchievements()
     t.achievementPoints = GetTotalAchievementPoints()

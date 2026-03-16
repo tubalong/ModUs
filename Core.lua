@@ -135,6 +135,7 @@ function handler:PLAYER_ENTERING_WORLD()
     self:RegisterEvent("GROUP_ROSTER_UPDATE")
     self:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
     self:RegisterEvent("ACHIEVEMENT_EARNED")
+    self:RegisterEvent("FIRST_FRAME_RENDERED")
 
     if ModUs.isRetail then
         self:RegisterEvent("TRAIT_CONFIG_UPDATED")
@@ -238,6 +239,46 @@ function handler:GROUP_ROSTER_UPDATE(immediate)
             handler:GROUP_ROSTER_UPDATE(true)
         end)
     end
+end
+
+---------------------------------------------------------------------
+-- pet
+---------------------------------------------------------------------
+function handler:NEW_PET_ADDED()
+    handler:UnregisterEvent("NEW_PET_ADDED")
+    A.UpdatePets()
+end
+
+---------------------------------------------------------------------
+-- toy
+---------------------------------------------------------------------
+function handler:NEW_TOY_ADDED()
+    handler:UnregisterEvent("NEW_TOY_ADDED")
+    A.UpdateToys()
+end
+
+---------------------------------------------------------------------
+-- mount
+---------------------------------------------------------------------
+function handler:NEW_MOUNT_ADDED()
+    handler:UnregisterEvent("NEW_MOUNT_ADDED")
+    A.UpdateMounts()
+end
+
+---------------------------------------------------------------------
+-- FIRST_FRAME_RENDERED
+---------------------------------------------------------------------
+function handler:FIRST_FRAME_RENDERED()
+    handler:UnregisterEvent("FIRST_FRAME_RENDERED")
+
+    self:RegisterEvent("NEW_PET_ADDED")
+    self:RegisterEvent("NEW_TOY_ADDED")
+    self:RegisterEvent("NEW_MOUNT_ADDED")
+
+    C_Timer.After(1, function()
+        A.UpdatePets()
+        A.UpdateToys()
+    end)
 end
 
 ---------------------------------------------------------------------
