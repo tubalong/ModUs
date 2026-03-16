@@ -429,6 +429,10 @@ end
 -- update data
 ---------------------------------------------------------------------
 function C.UpdateData()
+    if ModUs.isRetail and C_ClassTrial.IsClassTrialCharacter() then
+        return
+    end
+
     local t = MU_Character
 
     t.battleTagMd5 = U.GetBattleTag()
