@@ -203,6 +203,7 @@ function handler:GUILD_ROSTER_UPDATE()
     retries[self.GUILD_ROSTER_UPDATE] = nil
 
     G.UpdateData()
+    MU_Character.guildName = GetGuildInfo("player")
 end
 
 ---------------------------------------------------------------------
