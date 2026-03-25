@@ -410,6 +410,7 @@ local GetAddOnMetadata = C_AddOns.GetAddOnMetadata
 local IsAddOnLoaded = C_AddOns.IsAddOnLoaded
 
 local WATCHED_ADDONS = {
+    "ModUs",
     "BFInfinite",
 }
 
@@ -439,7 +440,6 @@ function C.UpdateData()
     t.battleTagMd5 = U.GetBattleTag()
     t.fullName = U.UnitFullName("player")
     t.guid = UnitGUID("player")
-    t.guildName = GetGuildInfo("player")
     t.avgItemLevelEquipped = select(2, GetAverageItemLevel())
     t.faction = UnitFactionGroup("player")
     t.level = UnitLevel("player")
@@ -459,6 +459,16 @@ function C.UpdateData()
 
     t.equipments = {}
     UpdateAllEquipmentSlots()
+
+    if IsInGuild() then
+        t.guildName = GetGuildInfo("player")
+        t.guildName, t.guildRankName, t.guildRankIndex, t.guildRealm = GetGuildInfo("player")
+        if t.guildRealm then
+            t.guildRealm = U.RemoveRealmSuffix(t.guildRealm)
+        else
+            t.guildRealm = U.GetNormalizedRealmName()
+        end
+    end
 
     t.watchedAddons = GetWatchedAddons()
 end
