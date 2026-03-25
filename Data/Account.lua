@@ -195,7 +195,7 @@ if ModUs.isRetail then
     local GetCurrencyAmount = C_PerksProgram.GetCurrencyAmount
 
     function A.UpdateTradingPostCurrency()
-        MU_Account.tradingPost.currencyAmount = GetCurrencyAmount()
+        MU_Account.tradingPostCurrency = GetCurrencyAmount()
     end
 
     local GetVendorItemInfo = C_PerksProgram.GetVendorItemInfo
@@ -218,7 +218,7 @@ if ModUs.isRetail then
         for id in next, knownItems do
             tinsert(result, id)
         end
-        MU_Account.tradingPost.knownItems = table.concat(result, ",")
+        MU_Account.tradingPostItems = table.concat(result, ",")
     end
 else
     function A.UpdateTradingPostCurrency()
@@ -249,6 +249,5 @@ function A.UpdateData()
     -- t.achievements = GetAchievements()
     A.UpdateAchievements()
 
-    t.tradingPost = {}
     A.UpdateTradingPostCurrency()
 end
