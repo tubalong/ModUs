@@ -439,6 +439,7 @@ function C.UpdateData()
 
     t.battleTagMd5 = U.GetBattleTag()
     t.fullName = U.UnitFullName("player")
+    t.realmID = GetRealmID()
     t.guid = UnitGUID("player")
     t.avgItemLevelEquipped = select(2, GetAverageItemLevel())
     t.faction = UnitFactionGroup("player")
