@@ -1,6 +1,6 @@
 ﻿## Interface: 120001
-## Version: r5
-## Title: |cffff6600ModUs|r |cffc0c0c0r5|r
+## Version: r6
+## Title: |cffff6600ModUs|r |cffc0c0c0r6|r
 ## Notes: |cffff6600ModUs|r data synchronization tool
 ## Notes-zhCN: |cffff6600ModUs|r 数据同步工具
 ## Notes-zhTW: |cffff6600ModUs|r 資料同步工具

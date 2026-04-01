@@ -81,8 +81,6 @@ end
 function handler:PLAYER_LOGOUT()
     -- whole data update time
     I.RefreshUpdateTime()
-    -- trading post known items
-    A.SaveTradingPostKnownItems()
 end
 
 ---------------------------------------------------------------------

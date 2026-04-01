@@ -211,14 +211,14 @@ if ModUs.isRetail then
                 knownItems[id] = nil
             end
         end
-    end
 
-    function A.SaveTradingPostKnownItems()
+        -- save
         local result = {}
         for id in next, knownItems do
             tinsert(result, id)
         end
         MU_Account.tradingPostItems = table.concat(result, ",")
+        -- print("Updated trading post known items: " .. MU_Account.tradingPostItems)
     end
 else
     function A.UpdateTradingPostCurrency()
@@ -226,10 +226,6 @@ else
     end
 
     function A.UpdateTradingPostKnownItems()
-        -- do nothing
-    end
-
-    function A.SaveTradingPostKnownItems()
         -- do nothing
     end
 end
@@ -250,4 +246,5 @@ function A.UpdateData()
     A.UpdateAchievements()
 
     A.UpdateTradingPostCurrency()
+    A.UpdateTradingPostKnownItems()
 end
