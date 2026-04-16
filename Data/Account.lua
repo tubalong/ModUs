@@ -165,6 +165,16 @@ end
 function A.UpdateAchievements()
     local t = MU_Account
 
+    t.achievementPoints = GetTotalAchievementPoints()
+
+    if not t.achievementPoints then
+        t.achievementPoints = 0
+        t.latestAchievements = {}
+        t.numFoSAchievements = 0
+        t.numLegacyAchievements = 0
+        return
+    end
+
     local numFoSAchievements = 0
     local numLegacyAchievements = 0
 
@@ -185,7 +195,6 @@ function A.UpdateAchievements()
     t.numFoSAchievements = numFoSAchievements
     t.numLegacyAchievements = numLegacyAchievements
     t.latestAchievements = GetLatestAchievements()
-    t.achievementPoints = GetTotalAchievementPoints()
 end
 
 ---------------------------------------------------------------------
