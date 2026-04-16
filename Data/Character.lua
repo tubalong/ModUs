@@ -428,6 +428,57 @@ function GetWatchedAddons()
 end
 
 ---------------------------------------------------------------------
+-- mythic+ score
+---------------------------------------------------------------------
+local GetOverallDungeonScore = C_ChallengeMode and C_ChallengeMode.GetOverallDungeonScore
+local GetDungeonScoreRarityColor = C_ChallengeMode and C_ChallengeMode.GetDungeonScoreRarityColor
+local GetMapUIInfo = C_ChallengeMode and C_ChallengeMode.GetMapUIInfo
+local GetMapTable = C_ChallengeMode and C_ChallengeMode.GetMapTable
+local GetSeasonBestForMap = C_MythicPlus.GetSeasonBestForMap
+
+local function GetMythicPlusInfo()
+    if not GetOverallDungeonScore then return nil end
+
+    local score = GetOverallDungeonScore() or 0
+    local color = U.GetColorHex(GetDungeonScoreRarityColor(score))
+
+    local bestRunLevel = 0
+    local summary = {}
+
+    for _, mapID in next, GetMapTable() do
+        local name = GetMapUIInfo(mapID)
+        -- init
+        summary[name] = {
+            level = 0,
+            score = 0,
+            color = U.GetColorHex(GetDungeonScoreRarityColor(0)),
+            duration = 0,
+            affixes = {},
+            members = {},
+            date = {}
+        }
+
+        local intimeInfo = GetSeasonBestForMap(mapID)
+        if intimeInfo then
+            if intimeInfo.level > bestRunLevel then
+                bestRunLevel = intimeInfo.level
+            end
+            summary[name] = {
+                level = intimeInfo.level,
+                score = intimeInfo.dungeonScore,
+                color = U.GetColorHex(GetDungeonScoreRarityColor(intimeInfo.dungeonScore)),
+                duration = intimeInfo.durationSec,
+                affixes = intimeInfo.affixes,
+                members = intimeInfo.members,
+                date = intimeInfo.completionDate
+            }
+        end
+    end
+
+    return score, bestRunLevel, color, summary
+end
+
+---------------------------------------------------------------------
 -- update data
 ---------------------------------------------------------------------
 function C.UpdateData()
@@ -457,6 +508,8 @@ function C.UpdateData()
     t.professions = GetProfessionStr()
     t.talents = GetTalentStr()
     t.savedInstances = GetSavedInstances()
+    t.money = GetMoney()
+    t.mythicPlusScore, t.mythicPlusBestRunLevel, t.mythicPlusScoreColor, t.mythicPlusSummary = GetMythicPlusInfo()
 
     t.equipments = {}
     UpdateAllEquipmentSlots()

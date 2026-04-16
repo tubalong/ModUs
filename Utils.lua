@@ -86,10 +86,19 @@ function U.GetLevelRangeName(level)
 end
 
 ---------------------------------------------------------------------
+-- color hex
+---------------------------------------------------------------------
+function U.GetColorHex(colorObj)
+    if colorObj then
+        return "#" .. colorObj:GenerateHexColor():sub(3)
+    end
+end
+
+---------------------------------------------------------------------
 -- realm
 ---------------------------------------------------------------------
 local function RemoveSuffix(realmName)
-    if realmName and realmName:find("^时光") then
+    if realmName and realmName:find("^时光[VI]+") then
         return realmName:match("^时光[VI]+")
     end
     return realmName
