@@ -155,6 +155,7 @@ local function GetLatestAchievements()
             name = name,
             icon = icon,
             points = points,
+            description = desc,
             reward = rewardText,
             date = U.FormatDate(year, month, day), -- normalize to YYYY-MM-DD
         })
