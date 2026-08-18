@@ -111,9 +111,6 @@ function handler:PLAYER_ENTERING_WORLD()
 
     retries[self.PLAYER_ENTERING_WORLD] = nil
 
-    -- character
-    C.UpdateData()
-
     -- account
     A.UpdateData()
 
@@ -276,6 +273,7 @@ function handler:FIRST_FRAME_RENDERED()
     self:RegisterEvent("NEW_MOUNT_ADDED")
 
     C_Timer.After(1, function()
+        C.UpdateData()
         A.UpdatePets()
         A.UpdateToys()
     end)
