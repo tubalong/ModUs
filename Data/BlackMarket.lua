@@ -5,9 +5,9 @@ ModUs.blackMarket = {}
 ---@class BlackMarket
 local B = ModUs.blackMarket
 
-local GetHotItem = C_BlackMarket.GetHotItem
-local GetNumItems = C_BlackMarket.GetNumItems
-local GetItemInfoByIndex = C_BlackMarket.GetItemInfoByIndex
+local GetHotItem = C_BlackMarket and C_BlackMarket.GetHotItem
+local GetNumItems = C_BlackMarket and C_BlackMarket.GetNumItems
+local GetItemInfoByIndex = C_BlackMarket and C_BlackMarket.GetItemInfoByIndex
 local GetItemInfoInstant = C_Item.GetItemInfoInstant
 
 -- AUCTION_TIME_LEFT0          完成！

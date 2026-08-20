@@ -11,7 +11,10 @@ local UnitIsPlayer = UnitIsPlayer
 local UnitGUID = UnitGUID
 local UnitClassBase = UnitClassBase
 local UnitRace = UnitRace
+local UnitLevel = UnitLevel
+local UnitSex = UnitSex
 local UnitNameUnmodified = UnitNameUnmodified
+local UnitFactionGroup = UnitFactionGroup
 
 function P.SaveUnitData(unit)
     if InCombatLockdown() then return end
@@ -27,7 +30,7 @@ function P.SaveUnitData(unit)
     realm = realm and U.RemoveRealmSuffix(realm) or U.GetNormalizedRealmName()
     if not realm or realm == "" then return end
 
-    t[guid] = {
+    local result = {
         classID = select(2, UnitClassBase(unit)),
         raceID = select(3, UnitRace(unit)),
         level = UnitLevel(unit),
@@ -36,6 +39,15 @@ function P.SaveUnitData(unit)
         normalizedRealm = realm,
         lastSeen = time(),
     }
+
+    -- 检查数据是否完整有效
+    for _, v in next, result do
+        if issecretvalue(v) or not v or v == "" or v == 0 then
+            return
+        end
+    end
+
+    t[guid] = result
 end
 
 function P.SaveGroupData()
