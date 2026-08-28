@@ -42,6 +42,7 @@ function handler:ADDON_LOADED(name)
         self:RegisterEvent("PLAYER_LOGOUT")
         self:RegisterEvent("PLAYER_ENTERING_WORLD")
         self:RegisterEvent("PLAYER_TARGET_CHANGED")
+        self:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
         self:RegisterEvent("UPDATE_INSTANCE_INFO")
         if C_BlackMarket then
             self:RegisterEvent("BLACK_MARKET_ITEM_UPDATE")
@@ -207,6 +208,13 @@ end
 ---------------------------------------------------------------------
 function handler:PLAYER_TARGET_CHANGED()
     P.SaveUnitData("target")
+end
+
+---------------------------------------------------------------------
+-- UPDATE_MOUSEOVER_UNIT
+---------------------------------------------------------------------
+function handler:UPDATE_MOUSEOVER_UNIT()
+    P.SaveUnitData("mouseover")
 end
 
 ---------------------------------------------------------------------
