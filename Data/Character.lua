@@ -161,6 +161,7 @@ else
 end
 
 function C.UpdateTalents()
+    if not MU_DATA_SHARING_CONSENT then return end
     MU_Character.talents = GetTalentStr()
 end
 
@@ -352,6 +353,7 @@ local function UpdateAllEquipmentSlots()
 end
 
 function C.UpdateEquipmentSlot(slot)
+    if not MU_DATA_SHARING_CONSENT then return end
     local success
     if INV_SLOT_NAME[slot] then
         MU_Character.equipments[INV_SLOT_NAME[slot]], success = ExtractEquipmentData(slot)
@@ -400,6 +402,7 @@ local function GetSavedInstances()
 end
 
 function C.UpdateSavedInstances()
+    if not MU_DATA_SHARING_CONSENT then return end
     MU_Character.savedInstances = GetSavedInstances()
 end
 
@@ -482,6 +485,7 @@ end
 -- update data
 ---------------------------------------------------------------------
 function C.UpdateData()
+    if not MU_DATA_SHARING_CONSENT then return end
     if ModUs.isRetail and C_ClassTrial.IsClassTrialCharacter() then
         return
     end

@@ -1,3 +1,5 @@
+MU_DATA_SHARING_CONSENT = true
+
 ---@class ModUs
 local ModUs = select(2, ...)
 

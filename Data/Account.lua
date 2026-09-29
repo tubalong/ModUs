@@ -28,6 +28,7 @@ local function GetMounts()
 end
 
 function A.UpdateMounts()
+    if not MU_DATA_SHARING_CONSENT then return end
     local t = MU_Account
     t.mounts, t.numMounts = GetMounts()
 end
@@ -53,6 +54,7 @@ local function GetPets()
 end
 
 function A.UpdatePets()
+    if not MU_DATA_SHARING_CONSENT then return end
     local t = MU_Account
     t.pets, t.numPets = GetPets()
 end
@@ -93,6 +95,7 @@ local function GetToys()
 end
 
 function A.UpdateToys()
+    if not MU_DATA_SHARING_CONSENT then return end
     local t = MU_Account
     t.toys, t.numToys = GetToys()
 end
@@ -164,6 +167,8 @@ local function GetLatestAchievements()
 end
 
 function A.UpdateAchievements()
+    if not MU_DATA_SHARING_CONSENT then return end
+
     local t = MU_Account
 
     t.achievementPoints = GetTotalAchievementPoints()
@@ -205,6 +210,7 @@ if ModUs.isRetail then
     local GetCurrencyAmount = C_PerksProgram.GetCurrencyAmount
 
     function A.UpdateTradingPostCurrency()
+        if not MU_DATA_SHARING_CONSENT then return end
         MU_Account.tradingPostCurrency = GetCurrencyAmount()
     end
 
@@ -213,6 +219,7 @@ if ModUs.isRetail then
     local knownItems = {}
 
     function A.UpdateTradingPostKnownItems()
+        if not MU_DATA_SHARING_CONSENT then return end
         for _, id in next, GetAvailableVendorItemIDs() do
             local known = GetVendorItemInfo(id).purchased
             if known then
@@ -244,6 +251,8 @@ end
 -- update data
 ---------------------------------------------------------------------
 function A.UpdateData()
+    if not MU_DATA_SHARING_CONSENT then return end
+
     local t = MU_Account
 
     t.battleTagMd5, t.battleTag = U.GetBattleTag()
