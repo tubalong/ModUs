@@ -1,4 +1,5 @@
 MU_DATA_SHARING_CONSENT = true
+MU_POPULATION_UPLOADED_THROUGH_DATE = nil
 
 ---@class ModUs
 local ModUs = select(2, ...)
@@ -50,6 +51,13 @@ function handler:ADDON_LOADED(name)
             self:RegisterEvent("BLACK_MARKET_ITEM_UPDATE")
         end
 
+        if type(MU_PopulationStats) ~= "table" then
+            MU_PopulationStats = {}
+        end
+
+        P.UpdatePopulationStats()
+        P.SchedulePopulationUpdate()
+
         -- 清除旧数据
         MU_InfoA = nil
         MU_InfoC = nil
@@ -82,6 +90,7 @@ end
 -- PLAYER_LOGOUT
 ---------------------------------------------------------------------
 function handler:PLAYER_LOGOUT()
+    P.UpdatePopulationStats()
     -- whole data update time
     I.RefreshUpdateTime()
 end

@@ -242,3 +242,20 @@ end
 function U.GetClassID(class)
     return classFileToID[class] or localizedClassToID[class]
 end
+
+---------------------------------------------------------------------
+-- date
+---------------------------------------------------------------------
+function U.GetCurrentDate()
+    return date("%Y-%m-%d", GetServerTime())
+end
+
+function U.IsDateUploaded(date)
+    if type(MU_POPULATION_UPLOADED_THROUGH_DATE) ~= "string" or type(date) ~= "string" then
+        return
+    end
+
+    local uploadedThroughTime = time(MU_POPULATION_UPLOADED_THROUGH_DATE)
+    local checkTime = time(date)
+    return uploadedThroughTime and checkTime and uploadedThroughTime >= checkTime
+end
