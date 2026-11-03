@@ -1,5 +1,5 @@
 MU_DATA_SHARING_CONSENT = true
-MU_POPULATION_UPLOADED_THROUGH_DATE = nil
+MU_POPULATION_UPLOADED_ACK = {}
 
 ---@class ModUs
 local ModUs = select(2, ...)
@@ -24,6 +24,8 @@ local G = ModUs.guild
 local P = ModUs.population
 local T = ModUs.token
 local B = ModUs.blackMarket
+
+local md5 = LibStub("AF_MD5")
 
 ---------------------------------------------------------------------
 -- event handler
@@ -51,10 +53,17 @@ function handler:ADDON_LOADED(name)
             self:RegisterEvent("BLACK_MARKET_ITEM_UPDATE")
         end
 
+        if type(MU_CollectorID) ~= "string" then
+            local guid = UnitGUID("player")
+            local timestamp = time()
+            MU_CollectorID = md5.sumhexa((guid or "") .. timestamp)
+        end
+
         if type(MU_PopulationStats) ~= "table" then
             MU_PopulationStats = {}
         end
 
+        P.CompactPopulationStats()
         P.UpdatePopulationStats()
         P.SchedulePopulationUpdate()
 
@@ -245,7 +254,7 @@ function handler:GROUP_ROSTER_UPDATE(immediate)
             return
         end
         retries[self.GROUP_ROSTER_UPDATE] = nil
-        handler:UnregisterEvent("GROUP_ROSTER_UPDATE")
+        -- handler:UnregisterEvent("GROUP_ROSTER_UPDATE")
 
         P.SaveGroupData()
 

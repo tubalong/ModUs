@@ -246,16 +246,27 @@ end
 ---------------------------------------------------------------------
 -- date
 ---------------------------------------------------------------------
-function U.GetCurrentDate()
-    return date("%Y-%m-%d", GetServerTime())
+local SERVER_TIME_OFFSET = 8 * 60 * 60
+local SECONDS_PER_DAY = 24 * 60 * 60
+
+function U.GetServerDate(timestamp)
+    return date("!%Y-%m-%d", timestamp + SERVER_TIME_OFFSET)
 end
 
-function U.IsDateUploaded(date)
-    if type(MU_POPULATION_UPLOADED_THROUGH_DATE) ~= "string" or type(date) ~= "string" then
+function U.GetNextDay(timestamp)
+    return timestamp + SECONDS_PER_DAY - (timestamp + SERVER_TIME_OFFSET) % SECONDS_PER_DAY
+end
+
+function U.GetCurrentDate()
+    return U.GetServerDate(GetServerTime())
+end
+
+function U.IsDateUploaded(uploadedDay, day)
+    if type(uploadedDay) ~= "string" or type(day) ~= "string" then
         return
     end
 
-    local uploadedThroughTime = time(MU_POPULATION_UPLOADED_THROUGH_DATE)
-    local checkTime = time(date)
-    return uploadedThroughTime and checkTime and uploadedThroughTime >= checkTime
+    local uploadedThroughDate = tonumber((string.gsub(uploadedDay, "-", "")))
+    local checkDate = tonumber((string.gsub(day, "-", "")))
+    return uploadedThroughDate and checkDate and uploadedThroughDate > checkDate
 end

@@ -25,6 +25,7 @@ function P.SaveUnitData(unit)
 
     local guid = UnitGUID(unit)
     if not guid or issecretvalue(guid) then return end
+    P.UpdatePopulationStats(guid)
 
     local t = MU_Population
     if t[guid] then return end -- 每次登录只记录同一玩家一次
@@ -51,8 +52,6 @@ function P.SaveUnitData(unit)
     end
 
     t[guid] = result
-
-    P.UpdatePopulationStats(guid)
 end
 
 ---------------------------------------------------------------------
@@ -71,9 +70,9 @@ end
 -- 更新今日人口统计状态
 ---------------------------------------------------------------------
 local lastPopulationUpdate = GetServerTime()
+local playerGUID
 
-local function GetPopulationStats(timestamp)
-    local day = date("%Y-%m-%d", timestamp)
+local function GetPopulationStats(day)
     local t = MU_PopulationStats[day]
     if not t then
         t = {
@@ -86,49 +85,52 @@ local function GetPopulationStats(timestamp)
     return t
 end
 
-function P.UpdatePopulationStats(guid)
-    local now = GetServerTime()
-
-    while lastPopulationUpdate < now do
-        local day = date("*t", lastPopulationUpdate)
-        local nextDay = time({ year = day.year, month = day.month, day = day.day + 1, hour = 0, min = 0, sec = 0 })
-        local intervalEnd = math.min(now, nextDay)
-        local t = GetPopulationStats(lastPopulationUpdate)
-        t.activeSeconds = t.activeSeconds + intervalEnd - lastPopulationUpdate
-        lastPopulationUpdate = intervalEnd
-    end
-
-    lastPopulationUpdate = now
-    local t = GetPopulationStats(now)
-
+local function AddSeenPlayer(t, guid)
     if guid and not t.seenPlayers[guid] then
         t.seenPlayers[guid] = true
         t.uniquePlayers = t.uniquePlayers + 1
     end
 end
 
-function P.SchedulePopulationUpdate()
+function P.UpdatePopulationStats(guid)
     local now = GetServerTime()
-    local nextUpdate = date("*t", now)
-    nextUpdate.hour, nextUpdate.min, nextUpdate.sec = 23, 59, 59
-    local updateTime = time(nextUpdate)
-    if updateTime <= now then
-        nextUpdate.day = nextUpdate.day + 1
-        updateTime = time(nextUpdate)
+
+    if not playerGUID then
+        local currentPlayerGUID = UnitGUID("player")
+        if not issecretvalue(currentPlayerGUID) and currentPlayerGUID then
+            playerGUID = currentPlayerGUID
+        end
     end
 
-    C_Timer.After(updateTime - now, function()
+    while lastPopulationUpdate < now do
+        local intervalEnd = math.min(now, U.GetNextDay(lastPopulationUpdate))
+        local day = U.GetServerDate(lastPopulationUpdate)
+        local t = GetPopulationStats(day)
+        t.activeSeconds = t.activeSeconds + intervalEnd - lastPopulationUpdate
+        AddSeenPlayer(t, playerGUID)
+        lastPopulationUpdate = intervalEnd
+    end
+
+    lastPopulationUpdate = now
+    local t = GetPopulationStats(U.GetServerDate(now))
+    AddSeenPlayer(t, playerGUID)
+    AddSeenPlayer(t, guid)
+end
+
+function P.SchedulePopulationUpdate()
+    local now = GetServerTime()
+    C_Timer.After(U.GetNextDay(now) - now, function()
         P.UpdatePopulationStats()
         P.SchedulePopulationUpdate()
     end)
 end
 
 function P.CompactPopulationStats()
-    if type(MU_POPULATION_UPLOADED_THROUGH_DATE) ~= "string" then return end
+    if not MU_CollectorID or type(MU_POPULATION_UPLOADED_ACK[MU_CollectorID]) ~= "string" then return end
 
     local today = U.GetCurrentDate()
     for day, t in next, MU_PopulationStats do
-        if U.IsDateUploaded(day) then
+        if day < today and U.IsDateUploaded(MU_POPULATION_UPLOADED_ACK[MU_CollectorID], day) then
             MU_PopulationStats[day] = nil
         end
     end
