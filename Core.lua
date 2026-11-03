@@ -1,5 +1,4 @@
 MU_DATA_SHARING_CONSENT = true
-MU_POPULATION_UPLOADED_ACK = {}
 
 ---@class ModUs
 local ModUs = select(2, ...)
@@ -24,8 +23,6 @@ local G = ModUs.guild
 local P = ModUs.population
 local T = ModUs.token
 local B = ModUs.blackMarket
-
-local md5 = LibStub("AF_MD5")
 
 ---------------------------------------------------------------------
 -- event handler
@@ -52,20 +49,6 @@ function handler:ADDON_LOADED(name)
         if C_BlackMarket then
             self:RegisterEvent("BLACK_MARKET_ITEM_UPDATE")
         end
-
-        if type(MU_CollectorID) ~= "string" then
-            local guid = UnitGUID("player")
-            local timestamp = time()
-            MU_CollectorID = md5.sumhexa((guid or "") .. timestamp)
-        end
-
-        if type(MU_PopulationStats) ~= "table" then
-            MU_PopulationStats = {}
-        end
-
-        P.CompactPopulationStats()
-        P.UpdatePopulationStats()
-        P.SchedulePopulationUpdate()
 
         -- 清除旧数据
         MU_InfoA = nil
@@ -99,7 +82,6 @@ end
 -- PLAYER_LOGOUT
 ---------------------------------------------------------------------
 function handler:PLAYER_LOGOUT()
-    P.UpdatePopulationStats()
     -- whole data update time
     I.RefreshUpdateTime()
 end
