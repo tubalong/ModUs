@@ -10,6 +10,7 @@ ModUs.isTBC = WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
 ModUs.isWrath = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
 ModUs.isCata = WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
 ModUs.isMists = WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC
+ModUs.isForever = WOW_PROJECT_ID == WOW_PROJECT_CAMELOT
 
 ---------------------------------------------------------------------
 -- client version map
@@ -26,6 +27,8 @@ function U.GetClientMappingVersion(wowProjectID)
         return 3 -- 时光服 classic_titan
     elseif wowProjectID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC then
         return 4 -- 周年服 anniversary
+    elseif wowProjectID == WOW_PROJECT_CAMELOT then
+        return 5 -- 无限服 forever
     end
 end
 
@@ -68,6 +71,13 @@ function U.GetFlavorLevelRanges()
             medium = {21, 59},
             high = {60, 69},
             max = 70,
+        }
+    elseif ModUs.isForever then -- 无限服
+        return {
+            low = {1, 20},
+            medium = {21, 49},
+            high = {50, 59},
+            max = 60,
         }
     end
 end
@@ -131,6 +141,11 @@ local issecretvalue = issecretvalue or function() return false end
 
 function U.UnitFullName(unit)
     if not unit or not UnitIsPlayer(unit) then return end
+
+    if ModUs.isForever then
+        local name = GetUnitName(unit)
+        if issecretvalue(name) or not name or name == "" then return end
+    end
 
     local name, realm = UnitNameUnmodified(unit)
     if issecretvalue(name) or not name or name == "" then return end

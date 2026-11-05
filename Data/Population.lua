@@ -29,8 +29,13 @@ function P.SaveUnitData(unit)
     local t = MU_Population
     if t[guid] then return end -- 每次登录只记录同一玩家一次
 
-    local _, realm = UnitNameUnmodified(unit)
-    realm = realm and U.RemoveRealmSuffix(realm) or U.GetNormalizedRealmName()
+    local realm
+    if ModUs.isForever then
+        realm = U.GetNormalizedRealmName()
+    else
+        realm = select(2, UnitNameUnmodified(unit))
+        realm = realm and U.RemoveRealmSuffix(realm) or U.GetNormalizedRealmName()
+    end
     if not realm or realm == "" then return end
 
     local result = {
