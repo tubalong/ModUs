@@ -145,6 +145,7 @@ function U.UnitFullName(unit)
     if ModUs.isForever then
         local name = GetUnitName(unit)
         if issecretvalue(name) or not name or name == "" then return end
+        return name
     end
 
     local name, realm = UnitNameUnmodified(unit)
